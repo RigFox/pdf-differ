@@ -14,6 +14,10 @@ RESULT_DIFF = RESULT / 'diff'
 def get_folder(filename: Literal['old', 'new']):
     return RESULT_OLD if filename == 'old' else RESULT_NEW
 
+def create_folders():
+    RESULT_OLD.mkdir(parents=True, exist_ok=True)
+    RESULT_NEW.mkdir(parents=True, exist_ok=True)
+    RESULT_DIFF.mkdir(parents=True, exist_ok=True)
 
 def cleanup(path: Path):
     for file in path.iterdir():
@@ -93,6 +97,7 @@ def diff_all():
 
 
 if __name__ == '__main__':
+    create_folders()
     cleanup_all()
     convert_pdfs()
     diff_all()
