@@ -52,7 +52,6 @@ def find_page(i: int, filename: Literal['old', 'new']):
     prefix = '0' if i < 10 else ''
     image = list(folder.glob(f'?-{prefix}{i}.jpg'))
 
-    print(image)
     if len(image) != 1:
         raise ValueError(f'Can\'t find page {i}')
 
@@ -65,7 +64,13 @@ def diff(page: int, path1: Path, path2: Path):
 
     diff = ImageChops.difference(img1, img2)
 
-    diff.save(RESULT_DIFF / f'{page}.jpg')
+    # Images have same size
+    dst = Image.new('RGB', (img1.width + img2.width + diff.width, img1.height))
+    dst.paste(img1, (0, 0))
+    dst.paste(img2, (img1.width, 0))
+    dst.paste(diff, (img1.width + img2.width, 0))
+
+    dst.save(RESULT_DIFF / f'{page}.jpg')
 
 
 def diff_all():

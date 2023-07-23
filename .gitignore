@@ -1,3 +1,7 @@
 .DS_Store
 .venv
 .vscode
+pdfs/*.pdf
+result/old/*.jpg
+result/new/*.jpg
+result/diff/*.jpg
