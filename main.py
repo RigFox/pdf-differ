@@ -28,7 +28,6 @@ class App(customtkinter.CTk):
         width = self.old_label.winfo_width() + self.old_btn.winfo_width() + 15
         height = self.old_btn.winfo_height() * 4 + 15 * 5
         self.geometry(f'{width}x{height}')
-        self.configure(background='#6761A8')
         self.resizable(False, False)
 
     @property
