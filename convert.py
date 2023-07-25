@@ -31,7 +31,7 @@ def cleanup_all():
     cleanup(RESULT_DIFF)
 
 
-def convert(filename: Literal['old', 'new']):
+def convert(filepath: str, output_dir: any):
     def filename_generator():
         i = 0
 
@@ -39,10 +39,8 @@ def convert(filename: Literal['old', 'new']):
             i += 1
             yield str(i)
 
-    folder = get_folder(filename)
-
-    convert_from_path(PDFS / f'{filename}.pdf', fmt='jpg', output_file=filename_generator(),
-                      output_folder=folder, thread_count=cpu_count())
+    convert_from_path(filepath, fmt='jpg', output_file=filename_generator(),
+                      output_folder=output_dir, thread_count=cpu_count())
 
 
 def convert_pdfs():
@@ -50,11 +48,10 @@ def convert_pdfs():
     convert('new')
 
 
-def find_page(i: int, filename: Literal['old', 'new']):
-    folder = get_folder(filename)
+def find_page(i: int, folder: str):
 
     prefix = '0' if i < 10 else ''
-    image = list(folder.glob(f'?-{prefix}{i}.jpg'))
+    image = list(Path(folder).glob(f'?-{prefix}{i}.jpg'))
 
     if len(image) != 1:
         raise ValueError(f'Can\'t find page {i}')
@@ -62,7 +59,7 @@ def find_page(i: int, filename: Literal['old', 'new']):
     return image[0]
 
 
-def diff(page: int, path1: Path, path2: Path):
+def diff(page: int, path1: Path, path2: Path, output_dir):
     img1 = Image.open(path1)
     img2 = Image.open(path2)
 
@@ -73,13 +70,12 @@ def diff(page: int, path1: Path, path2: Path):
     dst.paste(img1, (0, 0))
     dst.paste(img2, (img1.width, 0))
     dst.paste(diff, (img1.width + img2.width, 0))
+    dst.save(f'{output_dir}/{page}.jpg')
 
-    dst.save(RESULT_DIFF / f'{page}.jpg')
 
-
-def diff_all():
-    old_count = len(list(RESULT_OLD.glob('*.jpg')))
-    new_count = len(list(RESULT_NEW.glob('*.jpg')))
+def diff_all(old_dir, new_dir, output_dir):
+    old_count = len(list(Path(old_dir).glob('*.jpg')))
+    new_count = len(list(Path(new_dir).glob('*.jpg')))
     diff_count = min(old_count, new_count)
 
     if (old_count != new_count):
@@ -90,10 +86,10 @@ def diff_all():
     print(f'Diff {diff_count} pages')
 
     for i in range(1, diff_count + 1):
-        old_image = find_page(i, 'old')
-        new_image = find_page(i, 'new')
+        old_image = find_page(i, old_dir)
+        new_image = find_page(i, new_dir)
 
-        diff(i, old_image, new_image)
+        diff(i, old_image, new_image, output_dir)
 
 
 if __name__ == '__main__':
