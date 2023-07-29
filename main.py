@@ -79,19 +79,20 @@ class App(MainUI):
     def deactivate_btn(self):
         self.old_btn._state = 'disabled'
         self.new_btn._state = 'disabled'
+        self.save_dir_btn._state = 'disabled'
         self.select._state = 'disabled'
         self.settings_btn._state = 'disabled'
 
     def activate_btn(self):
         self.old_btn._state = 'active'
         self.new_btn._state = 'active'
+        self.save_dir_btn._state = 'active'
         self.select._state = 'active'
         self.settings_btn._state = 'active'
 
     def run_settings(self):
-        if not self.settings_runner:
-            Settings(master=self)
-            self.deactivate_btn()
+        Settings(master=self)
+        self.deactivate_btn()
 
     def runner(self):
         self.perform_check_files()

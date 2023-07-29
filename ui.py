@@ -125,11 +125,11 @@ class MainUI(customtkinter.CTk, UI):
         self.new_label.grid(
             column=0,
             row=2)
-        self.new_btn = self.btn_generator(
+        self.save_dir_btn = self.btn_generator(
             frame=self,
             text="Save to",
             cmd=self.choose_save_dir)
-        self.new_btn.grid(
+        self.save_dir_btn.grid(
             column=1,
             row=2,
             pady=15)
