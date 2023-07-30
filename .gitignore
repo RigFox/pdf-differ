@@ -5,3 +5,4 @@ pdfs/*.pdf
 result/old/*.jpg
 result/new/*.jpg
 result/diff/*.jpg
+__pycache__/
